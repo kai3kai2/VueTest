@@ -62,7 +62,7 @@ async function handleLogin() {
     <div class="w-full max-w-[420px] bg-white rounded-2xl shadow-lg px-8 py-10">
       <!-- Icon -->
       <div class="flex justify-center mb-4">
-        <div class="w-14 h-14 rounded-full bg-primary-600 flex items-center justify-center shadow-md">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md" style="background-color: oklch(0.511 0.262 276.966)">
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -127,7 +127,7 @@ async function handleLogin() {
             <input v-model="rememberMe" type="checkbox" class="w-4 h-4 accent-primary-600 rounded" />
             <span class="text-sm text-gray-600">記住我</span>
           </label>
-          <a href="#" class="text-sm text-primary-600 hover:underline">忘記密碼？</a>
+          <a href="#" class="text-sm hover:underline" style="color: oklch(0.511 0.262 276.966)">忘記密碼？</a>
         </div>
 
         <!-- Submit -->
@@ -135,8 +135,8 @@ async function handleLogin() {
           type="submit"
           :disabled="loading"
           class="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-semibold
-                 bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800
-                 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                 text-white disabled:opacity-60 disabled:cursor-not-allowed transition"
+          style="background-color: oklch(0.511 0.262 276.966)"
         >
           <svg v-if="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
@@ -151,7 +151,7 @@ async function handleLogin() {
         </button>
 
         <!-- Hint -->
-        <div class="mt-4 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 flex items-start gap-2">
+        <div class="mt-4 px-6 py-4 rounded-lg text-sm flex items-start gap-2" style="background-color: oklch(0.882 0.059 254.128); color: oklch(0.424 0.199 265.638)">
           <span>💡</span>
           <span>提示：輸入任意電子郵件和密碼即可登入</span>
         </div>
@@ -161,7 +161,7 @@ async function handleLogin() {
     <!-- Register link -->
     <p class="mt-6 text-sm text-gray-500">
       還沒有帳號？
-      <a href="#" class="text-primary-600 hover:underline font-medium">立即註冊</a>
+      <RouterLink :to="{ name: 'register' }" class="hover:underline font-medium" style="color: oklch(0.511 0.262 276.966)">立即註冊</RouterLink>
     </p>
   </div>
 </template>
