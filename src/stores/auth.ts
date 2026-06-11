@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 interface AuthUser {
   email: string
+  birthday?: string
 }
 
 const STORAGE_KEY = 'auth_user'
@@ -13,9 +14,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => user.value !== null)
 
-  /** Mock login — the API has no auth endpoint; any valid email + password succeeds. */
   function login(email: string, remember: boolean) {
-    user.value = { email }
+    user.value = { email, birthday: '1990-01-01' }
     if (remember) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(user.value))
     }

@@ -1,44 +1,38 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const auth = useAuthStore()
 
-const email = defineModel<string>('email', { default: '' })
-const password = defineModel<string>('password', { default: '' })
-const rememberMe = defineModel<boolean>('rememberMe', { default: false })
+const email = ref('')
+const password = ref('')
+const rememberMe = ref(false)
 
 const loading = ref(false)
 const emailError = ref('')
 const passwordError = ref('')
 
-const isEmailValid = computed(() =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value),
-)
-
 function validate(): boolean {
   emailError.value = ''
   passwordError.value = ''
 
-  if (!email.value) {
+  const trimmedEmail = email.value.trim()
+
+  if (!trimmedEmail) {
     emailError.value = '請輸入電子郵件'
-    return false
-  }
-  if (!isEmailValid.value) {
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
     emailError.value = '請輸入有效的電子郵件格式'
-    return false
   }
+
   if (!password.value) {
     passwordError.value = '請輸入密碼'
-    return false
+  } else if (password.value.length < 6) {
+    passwordError.value = '密碼至少需要 6 個字元'
   }
-  if (password.value.length < 3) {
-    passwordError.value = '密碼至少需要 3 個字元'
-    return false
-  }
-  return true
+
+  return !emailError.value && !passwordError.value
 }
 
 async function handleLogin() {

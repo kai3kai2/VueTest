@@ -42,7 +42,7 @@ defineEmits<{
         </div>
 
         <!-- Footer -->
-        <div v-if="$slots.footer" class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
+        <div v-if="$slots.footer" class="px-6 py-4 border-t border-gray-100 flex gap-3">
           <slot name="footer" />
         </div>
       </div>

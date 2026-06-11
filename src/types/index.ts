@@ -16,6 +16,7 @@ export interface Account {
   email: string
   roleLevel: RoleLevel
   status: AccountStatus
+  createdAt?: string
 }
 
 export interface AccountFormDto {
@@ -30,7 +31,3 @@ export interface AccountsQuery {
   email?: string
 }
 
-export interface ApiError {
-  message: string
-  statusCode: number
-}

@@ -12,6 +12,7 @@ const form = reactive({
   password: '',
   confirmPassword: '',
   roleLevel: RoleLevel.USER,
+  status: AccountStatus.ON,
 })
 
 const errors = reactive({
@@ -26,10 +27,15 @@ const successMessage = ref('')
 const apiError = ref('')
 
 const ROLE_OPTIONS: { value: RoleLevel; label: string }[] = [
-  { value: RoleLevel.USER, label: 'User' },
-  { value: RoleLevel.CLIENT, label: 'Client' },
-  { value: RoleLevel.EDITOR, label: 'Editor' },
-  { value: RoleLevel.ADMIN, label: 'Admin' },
+  { value: RoleLevel.ADMIN, label: '管理員' },
+  { value: RoleLevel.EDITOR, label: '編輯' },
+  { value: RoleLevel.USER, label: '用戶' },
+  { value: RoleLevel.CLIENT, label: '訪客' },
+]
+
+const STATUS_OPTIONS: { value: AccountStatus; label: string }[] = [
+  { value: AccountStatus.ON, label: '啟用' },
+  { value: AccountStatus.OFF, label: '停用' },
 ]
 
 function validate(): boolean {
@@ -53,7 +59,7 @@ async function handleRegister() {
       name: form.name,
       email: form.email,
       roleLevel: form.roleLevel,
-      status: AccountStatus.ON,
+      status: form.status,
     })
     successMessage.value = '註冊成功！即將跳轉至登入頁面...'
     setTimeout(() => router.push({ name: 'login' }), 1800)
@@ -161,6 +167,20 @@ async function handleRegister() {
                    focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
           >
             <option v-for="opt in ROLE_OPTIONS" :key="opt.value" :value="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">狀態</label>
+          <select
+            v-model="form.status"
+            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none transition
+                   focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
+          >
+            <option v-for="opt in STATUS_OPTIONS" :key="opt.value" :value="opt.value">
               {{ opt.label }}
             </option>
           </select>

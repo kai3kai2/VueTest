@@ -8,7 +8,7 @@ const http = axios.create({
   },
 })
 
-// Attach required interviewer identity header on every request
+// 面試者名稱 header 設定
 http.interceptors.request.use((config) => {
   config.headers['interviewerName'] = import.meta.env.VITE_INTERVIEWER_NAME
   return config

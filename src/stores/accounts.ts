@@ -23,8 +23,8 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   async function create(dto: AccountFormDto): Promise<boolean> {
     try {
-      const { data } = await accountsApi.create(dto)
-      accounts.value.unshift(data)
+      await accountsApi.create(dto)
+      await fetchAll()
       return true
     } catch (e) {
       error.value = (e as Error).message
@@ -34,9 +34,8 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   async function update(id: string, dto: AccountFormDto): Promise<boolean> {
     try {
-      const { data } = await accountsApi.update(id, dto)
-      const index = accounts.value.findIndex((a) => a.id === id)
-      if (index !== -1) accounts.value[index] = data
+      await accountsApi.update(id, dto)
+      await fetchAll()
       return true
     } catch (e) {
       error.value = (e as Error).message

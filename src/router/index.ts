@@ -23,10 +23,6 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: '/accounts',
-        },
-        {
-          path: 'accounts',
           name: 'accounts',
           component: () => import('@/pages/AccountsPage.vue'),
         },
