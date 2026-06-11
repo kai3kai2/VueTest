@@ -1,30 +1,19 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import BaseModal from './BaseModal.vue'
-import { RoleLevel, AccountStatus } from '@/types'
+import { RoleLevel, AccountStatus, ROLE_OPTIONS, STATUS_OPTIONS } from '@/types'
 import type { Account, AccountFormDto } from '@/types'
 
 const props = defineProps<{
   account?: Account | null
   loading?: boolean
+  existingAccounts?: Account[]
 }>()
 
 const emit = defineEmits<{
   close: []
   submit: [dto: AccountFormDto]
 }>()
-
-const ROLE_OPTIONS: { value: RoleLevel; label: string }[] = [
-  { value: RoleLevel.ADMIN, label: '管理員' },
-  { value: RoleLevel.EDITOR, label: '編輯' },
-  { value: RoleLevel.USER, label: '用戶' },
-  { value: RoleLevel.CLIENT, label: '訪客' },
-]
-
-const STATUS_OPTIONS: { value: AccountStatus; label: string }[] = [
-  { value: AccountStatus.ON, label: '啟用' },
-  { value: AccountStatus.OFF, label: '停用' },
-]
 
 const form = reactive<AccountFormDto>({
   name: '',
@@ -56,10 +45,28 @@ watch(
 )
 
 function validate(): boolean {
-  errors.name = form.name.trim() ? '' : '請輸入姓名'
-  errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+  const trimmedName = form.name.trim()
+  const trimmedEmail = form.email.trim().toLowerCase()
+
+  errors.name = trimmedName ? '' : '請輸入姓名'
+  errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)
     ? ''
     : '請輸入有效的電子郵件'
+
+  if (!errors.name && props.existingAccounts) {
+    const duplicate = props.existingAccounts.find(
+      a => a.name.trim() === trimmedName && a.id !== props.account?.id
+    )
+    if (duplicate) errors.name = '此姓名已被使用'
+  }
+
+  if (!errors.email && props.existingAccounts) {
+    const duplicate = props.existingAccounts.find(
+      a => a.email.toLowerCase() === trimmedEmail && a.id !== props.account?.id
+    )
+    if (duplicate) errors.email = '此電子郵件已被使用'
+  }
+
   return !errors.name && !errors.email
 }
 

@@ -1,10 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-
-interface AuthUser {
-  email: string
-  birthday?: string
-}
+import type { AuthUser } from '@/types'
 
 const STORAGE_KEY = 'auth_user'
 
@@ -15,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null)
 
   function login(email: string, remember: boolean) {
-    user.value = { email, birthday: '1990-01-01' }
+    user.value = { email }
     if (remember) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(user.value))
     }

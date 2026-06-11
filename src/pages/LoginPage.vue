@@ -40,8 +40,8 @@ async function handleLogin() {
 
   loading.value = true
   try {
-    // Mock auth — API has no login endpoint
-    await new Promise((r) => setTimeout(r, 600))
+    // 伺服器沒有登入端點，用延遲模擬非同步感
+    await new Promise((r) => setTimeout(r, 500))
     auth.login(email.value, rememberMe.value)
     router.push({ name: 'accounts' })
   } finally {

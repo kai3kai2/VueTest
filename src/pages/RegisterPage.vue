@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { accountsApi } from '@/api/accounts'
-import { RoleLevel, AccountStatus } from '@/types'
+import { useAccountsStore } from '@/stores/accounts'
+import { RoleLevel, AccountStatus, ROLE_OPTIONS, STATUS_OPTIONS } from '@/types'
 
 const router = useRouter()
+const store = useAccountsStore()
 
 const form = reactive({
   name: '',
@@ -24,19 +25,7 @@ const errors = reactive({
 
 const loading = ref(false)
 const successMessage = ref('')
-const apiError = ref('')
-
-const ROLE_OPTIONS: { value: RoleLevel; label: string }[] = [
-  { value: RoleLevel.ADMIN, label: '管理員' },
-  { value: RoleLevel.EDITOR, label: '編輯' },
-  { value: RoleLevel.USER, label: '用戶' },
-  { value: RoleLevel.CLIENT, label: '訪客' },
-]
-
-const STATUS_OPTIONS: { value: AccountStatus; label: string }[] = [
-  { value: AccountStatus.ON, label: '啟用' },
-  { value: AccountStatus.OFF, label: '停用' },
-]
+const apiError = ref<string | null>(null)
 
 function validate(): boolean {
   errors.name = form.name.trim() ? '' : '請輸入姓名'
@@ -53,20 +42,20 @@ async function handleRegister() {
   if (!validate()) return
 
   loading.value = true
-  apiError.value = ''
-  try {
-    await accountsApi.create({
-      name: form.name,
-      email: form.email,
-      roleLevel: form.roleLevel,
-      status: form.status,
-    })
+  apiError.value = null
+  const ok = await store.create({
+    name: form.name,
+    email: form.email,
+    roleLevel: form.roleLevel,
+    status: form.status,
+  })
+  loading.value = false
+
+  if (ok) {
     successMessage.value = '註冊成功！即將跳轉至登入頁面...'
     setTimeout(() => router.push({ name: 'login' }), 1800)
-  } catch (e) {
-    apiError.value = (e as Error).message
-  } finally {
-    loading.value = false
+  } else {
+    apiError.value = store.error ?? '註冊失敗，請稍後再試'
   }
 }
 </script>
@@ -158,13 +147,14 @@ async function handleRegister() {
           <p v-if="errors.email" class="mt-1 text-xs text-red-500">{{ errors.email }}</p>
         </div>
 
-        <!-- Role -->
+        <!-- Role（註冊時固定為用戶，不可更改） -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1.5">角色</label>
           <select
             v-model="form.roleLevel"
-            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none transition
-                   focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
+            disabled
+            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm
+                   bg-gray-50 text-gray-400 cursor-not-allowed"
           >
             <option v-for="opt in ROLE_OPTIONS" :key="opt.value" :value="opt.value">
               {{ opt.label }}
@@ -172,13 +162,14 @@ async function handleRegister() {
           </select>
         </div>
 
-        <!-- Status -->
+        <!-- Status（註冊時固定為啟用，不可更改） -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1.5">狀態</label>
           <select
             v-model="form.status"
-            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none transition
-                   focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
+            disabled
+            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm
+                   bg-gray-50 text-gray-400 cursor-not-allowed"
           >
             <option v-for="opt in STATUS_OPTIONS" :key="opt.value" :value="opt.value">
               {{ opt.label }}

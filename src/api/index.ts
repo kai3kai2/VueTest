@@ -8,13 +8,13 @@ const http = axios.create({
   },
 })
 
-// 面試者名稱 header 設定
+// 依要求帶入面試者名稱
 http.interceptors.request.use((config) => {
   config.headers['interviewerName'] = import.meta.env.VITE_INTERVIEWER_NAME
   return config
 })
 
-// Normalise error responses
+// 統一將錯誤回應轉成 Error 物件往上拋
 http.interceptors.response.use(
   (response) => response,
   (error) => {

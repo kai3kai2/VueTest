@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
+const showLogoutConfirm = ref(false)
+const loggingOut = ref(false)
 
-function logout() {
+async function confirmLogout() {
+  loggingOut.value = true
+  await new Promise((r) => setTimeout(r, 500))
   auth.logout()
   router.push({ name: 'login' })
 }
@@ -39,15 +45,20 @@ function logout() {
           </div>
 
           <button
-            @click="logout"
+            @click="showLogoutConfirm = true"
+            :disabled="loggingOut"
             class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-gray-600
-                   hover:bg-red-50 hover:text-red-500 transition"
+                   hover:bg-red-50 hover:text-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg v-if="loggingOut" class="w-4 h-4 flex-shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <svg v-else class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span class="xs:inline">登出</span>
+            <span class="xs:inline">{{ loggingOut ? '登出中...' : '登出' }}</span>
           </button>
         </div>
       </div>
@@ -58,4 +69,12 @@ function logout() {
       <RouterView />
     </main>
   </div>
+
+  <ConfirmDialog
+    v-if="showLogoutConfirm"
+    message="確定要登出嗎？"
+    :loading="loggingOut"
+    @confirm="confirmLogout"
+    @cancel="showLogoutConfirm = false"
+  />
 </template>
