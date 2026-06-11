@@ -5,7 +5,7 @@ A Vue 3 + TypeScript + Tailwind CSS account management app built for the Mercury
 ## Tech Stack
 
 - **Vue 3** (Composition API + `<script setup>`)
-- **Vite 8** — build tool
+- **Vite 6** — build tool
 - **TypeScript** — full type coverage
 - **Tailwind CSS v3** — utility-first styling, responsive design
 - **Pinia** — state management
@@ -39,7 +39,7 @@ cp .env.example .env
 ```
 
 ```env
-VITE_API_BASE_URL=https://api-frontend-interview-server.metcfire.com.tw
+VITE_API_BASE_URL=your_api_base_url
 VITE_INTERVIEWER_NAME=YourEnglishName
 ```
 
