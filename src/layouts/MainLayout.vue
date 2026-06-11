@@ -72,7 +72,9 @@ async function confirmLogout() {
 
   <ConfirmDialog
     v-if="showLogoutConfirm"
+    title="確認登出"
     message="確定要登出嗎？"
+    confirm-text="確認登出"
     :loading="loggingOut"
     @confirm="confirmLogout"
     @cancel="showLogoutConfirm = false"

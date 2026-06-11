@@ -2,6 +2,8 @@
 defineProps<{
   message: string
   loading?: boolean
+  title?: string
+  confirmText?: string
 }>()
 
 defineEmits<{
@@ -25,7 +27,7 @@ defineEmits<{
             </svg>
           </div>
           <div>
-            <h3 class="text-base font-semibold text-gray-800 mb-1">確認刪除</h3>
+            <h3 class="text-base font-semibold text-gray-800 mb-1">{{ title ?? '確認刪除' }}</h3>
             <p class="text-sm text-gray-500">{{ message }}</p>
           </div>
         </div>
@@ -48,7 +50,7 @@ defineEmits<{
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            {{ loading ? '刪除中...' : '確認刪除' }}
+            {{ loading ? '處理中...' : (confirmText ?? '確認刪除') }}
           </button>
         </div>
       </div>
